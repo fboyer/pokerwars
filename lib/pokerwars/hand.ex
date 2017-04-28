@@ -13,6 +13,8 @@ defmodule Pokerwars.Hand do
         :straight_flush
       x_of_a_kind?(cards, 4) ->
         :four_of_a_kind
+      # full_house?(cards) ->
+      #   :full_house
       true ->
         :high_card
     end
@@ -20,9 +22,9 @@ defmodule Pokerwars.Hand do
 
   def x_of_a_kind?(cards, x) do
     cards
-    |> Enum.group_by(fn c -> c.suit end)
-    |> Stream.map(fn {suit, cards} -> {suit, Enum.count(cards)} end)
-    |> Enum.any?(fn {_suit, n} -> n == x end)
+    |> Enum.group_by(fn c -> c.rank end)
+    |> Stream.map(fn {rank, cards} -> {rank, Enum.count(cards)} end)
+    |> Enum.any?(fn {_rank, n} -> n == x end)
   end
 
   def same_suit?(suits) do
