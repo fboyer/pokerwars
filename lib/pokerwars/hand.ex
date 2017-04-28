@@ -13,8 +13,10 @@ defmodule Pokerwars.Hand do
         :straight_flush
       x_of_a_kind?(cards, 4) ->
         :four_of_a_kind
-      # full_house?(cards) ->
-      #   :full_house
+      x_of_a_kind?(cards, 3) && x_of_a_kind?(cards, 2) ->
+        :full_house
+      same_suit?(cards) ->
+        :flush
       true ->
         :high_card
     end
