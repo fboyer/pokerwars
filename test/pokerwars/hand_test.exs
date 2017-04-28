@@ -79,6 +79,30 @@ defmodule Pokerwars.HandTest do
       refute Hand.score(cards) == :straight_flush
     end
 
+    test "evaluates to four of a kind" do
+      cards = [
+        %Card{rank: 7, suit: :clubs},
+        %Card{rank: 8, suit: :clubs},
+        %Card{rank: 9, suit: :spades},
+        %Card{rank: 10, suit: :clubs},
+        %Card{rank: 11, suit: :clubs}
+      ]
+
+      assert Hand.score(cards) == :four_of_a_kind
+    end
+    
+    test "does not evaluate to four of a kind for mismatching suits" do
+      cards = [
+        %Card{rank: 7, suit: :hearts},
+        %Card{rank: 8, suit: :clubs},
+        %Card{rank: 9, suit: :spades},
+        %Card{rank: 10, suit: :diamonds},
+        %Card{rank: 11, suit: :clubs}
+      ]
+
+      refute Hand.score(cards) == :four_of_a_kind
+    end
+
     test "evaluates high card" do
       cards = [
         %Card{rank: 2, suit: :spades},

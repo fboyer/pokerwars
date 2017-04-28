@@ -1,6 +1,4 @@
 defmodule Pokerwars.Hand do
-  alias Pokerwars.Card
-
   def score(cards) do
     sorted_cards = Enum.sort(cards, fn c, n -> c.rank <= n.rank end)
     evaluate(sorted_cards)
@@ -13,9 +11,18 @@ defmodule Pokerwars.Hand do
     cond do
       same_suit?(suits) && consecutive_ranks?(ranks) ->
         :straight_flush
+      x_of_a_kind?(cards, 4) ->
+        :four_of_a_kind
       true ->
         :high_card
     end
+  end
+
+  def x_of_a_kind?(cards, x) do
+    cards
+    |> Enum.group_by(fn c -> c.suit end)
+    |> Stream.map(fn {suit, cards} -> {suit, Enum.count(cards)} end)
+    |> Enum.any?(fn {_suit, n} -> n == x end)
   end
 
   def same_suit?(suits) do
