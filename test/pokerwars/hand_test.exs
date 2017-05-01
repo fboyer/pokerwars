@@ -45,11 +45,11 @@ defmodule Pokerwars.HandTest do
 
     test "evaluates straight flush of clubs" do
       cards = [
-        %Card{rank: 7, suit: :clubs},
-        %Card{rank: 8, suit: :clubs},
         %Card{rank: 9, suit: :clubs},
-        %Card{rank: 10, suit: :clubs},
-        %Card{rank: 11, suit: :clubs}
+        %Card{rank: 8, suit: :clubs},
+        %Card{rank: 7, suit: :clubs},
+        %Card{rank: 6, suit: :clubs},
+        %Card{rank: 5, suit: :clubs}
       ]
 
       assert Hand.score(cards) == :straight_flush
@@ -57,11 +57,11 @@ defmodule Pokerwars.HandTest do
 
     test "does not evaluate straight flush for non consecutive values" do
       cards = [
-        %Card{rank: 7, suit: :clubs},
-        %Card{rank: 8, suit: :clubs},
         %Card{rank: 9, suit: :clubs},
-        %Card{rank: 10, suit: :clubs},
-        %Card{rank: 2, suit: :clubs}
+        %Card{rank: 8, suit: :clubs},
+        %Card{rank: 7, suit: :clubs},
+        %Card{rank: 6, suit: :clubs},
+        %Card{rank: 4, suit: :clubs}
       ]
 
       refute Hand.score(cards) == :straight_flush
@@ -69,11 +69,11 @@ defmodule Pokerwars.HandTest do
 
     test "does not evaluate straight flush for mismatching suits" do
       cards = [
-        %Card{rank: 7, suit: :clubs},
+        %Card{rank: 9, suit: :clubs},
         %Card{rank: 8, suit: :clubs},
-        %Card{rank: 9, suit: :spades},
-        %Card{rank: 10, suit: :clubs},
-        %Card{rank: 11, suit: :clubs}
+        %Card{rank: 7, suit: :clubs},
+        %Card{rank: 6, suit: :clubs},
+        %Card{rank: 5, suit: :spades}
       ]
 
       refute Hand.score(cards) == :straight_flush
@@ -81,23 +81,23 @@ defmodule Pokerwars.HandTest do
 
     test "evaluates to four of a kind" do
       cards = [
-        %Card{rank: 7, suit: :clubs},
-        %Card{rank: 11, suit: :diamonds},
-        %Card{rank: 11, suit: :spades},
-        %Card{rank: 11, suit: :hearts},
-        %Card{rank: 11, suit: :clubs}
+        %Card{rank: 14, suit: :hearts},
+        %Card{rank: 14, suit: :spades},
+        %Card{rank: 14, suit: :diamonds},
+        %Card{rank: 14, suit: :clubs},
+        %Card{rank: 13, suit: :hearts}
       ]
 
       assert Hand.score(cards) == :four_of_a_kind
     end
-    
+
     test "evaluates to full house" do
       cards = [
-        %Card{rank: 7, suit: :clubs},
-        %Card{rank: 7, suit: :hearts},
-        %Card{rank: 7, suit: :spades},
-        %Card{rank: 9, suit: :spades},
-        %Card{rank: 9, suit: :clubs}
+        %Card{rank: 14, suit: :hearts},
+        %Card{rank: 14, suit: :spades},
+        %Card{rank: 14, suit: :diamonds},
+        %Card{rank: 13, suit: :hearts},
+        %Card{rank: 13, suit: :spades}
       ]
 
       assert Hand.score(cards) == :full_house
@@ -105,14 +105,38 @@ defmodule Pokerwars.HandTest do
 
     test "evaluates to flush" do
       cards = [
-        %Card{rank: 1, suit: :clubs},
-        %Card{rank: 2, suit: :clubs},
-        %Card{rank: 4, suit: :clubs},
-        %Card{rank: 6, suit: :clubs},
-        %Card{rank: 14, suit: :clubs}
+        %Card{rank: 14, suit: :spades},
+        %Card{rank: 10, suit: :spades},
+        %Card{rank: 7, suit: :spades},
+        %Card{rank: 6, suit: :spades},
+        %Card{rank: 2, suit: :spades}
       ]
 
       assert Hand.score(cards) == :flush
+    end
+
+    test "evaluates to straight" do
+      cards = [
+        %Card{rank: 5, suit: :clubs},
+        %Card{rank: 4, suit: :diamonds},
+        %Card{rank: 3, suit: :spades},
+        %Card{rank: 2, suit: :hearts},
+        %Card{rank: 14, suit: :hearts}
+      ]
+
+      assert Hand.score(cards) == :straight
+    end
+
+    test "evaluates to three of a kind" do
+      cards = [
+        %Card{rank: 14, suit: :hearts},
+        %Card{rank: 14, suit: :spades},
+        %Card{rank: 14, suit: :diamonds},
+        %Card{rank: 13, suit: :spades},
+        %Card{rank: 12, suit: :clubs}
+      ]
+
+      assert Hand.score(cards) == :three_of_a_kind
     end
 
     test "evaluates high card" do
@@ -156,8 +180,14 @@ defmodule Pokerwars.HandTest do
 
   describe "consecutive_ranks?/1" do
     test "returns true when ranks are consecutive" do
-      ranks = [1, 2, 3, 4, 5]
-      
+      ranks = [10, 11, 12, 13, 14]
+
+      assert Hand.consecutive_ranks?(ranks)
+    end
+
+    test "returns true when ranks are consecutive with a low ace card" do
+      ranks = [2, 3, 4, 5, 14]
+
       assert Hand.consecutive_ranks?(ranks)
     end
 

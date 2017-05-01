@@ -15,8 +15,12 @@ defmodule Pokerwars.Hand do
         :four_of_a_kind
       x_of_a_kind?(cards, 3) && x_of_a_kind?(cards, 2) ->
         :full_house
-      same_suit?(cards) ->
+      same_suit?(suits) ->
         :flush
+      consecutive_ranks?(ranks) ->
+        :straight
+      x_of_a_kind?(cards, 3) ->
+        :three_of_a_kind
       true ->
         :high_card
     end
@@ -34,7 +38,7 @@ defmodule Pokerwars.Hand do
     Enum.all?(suits, fn suit -> suit == first_suit end)
   end
 
-  def consecutive_ranks?([cur_rank, next_rank | rem_ranks]) do 
+  def consecutive_ranks?([cur_rank, next_rank | rem_ranks]) do
     next_rank - cur_rank == 1 && consecutive_ranks?([next_rank | rem_ranks])
   end
   def consecutive_ranks?(_), do: true
